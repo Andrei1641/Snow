@@ -12,6 +12,8 @@ from figure import Figure
 
 from check import Check
 
+from services import *
+
 
 # setting up all constants
 WIDTH: int = 500
@@ -77,32 +79,39 @@ while not game_over:
 
         #checking for game over
         if snowflake.hits_the_ground(HEIGHT):
-            file: dict = {}
             your_place: int = 0
             first_place_score: int = 0
-            if not os.path.exists("data.json"):
-                with open("data.json", "w") as f:
-                    file = {'scores' : []}
-                    json.dump(file, f)
 
-            with open("data.json", "r") as f:
-                file = json.load(f)
-                lst = file.get('scores')
+            app = create_app()
+            with app.app_context():
+                print(get_users_safe())
+                lst = get_users_safe()
 
-                if lst:
-                    your_place = Check.find(lst, int(Figure.score)) + 1
-                    first_place_score = lst[0]
-                else:
-                    first_place_score = int(Figure.score)
-                    file['scores'] = [int(Figure.score)]
+            file = {}
+            lst.sort(reverse=True)
+            print(lst)
 
-                    your_place = 1
+            if lst:
+                your_place = Check.find(lst, int(Figure.score)) + 1
+                first_place_score = lst[0]
+                file['scores'] = lst
+            else:
+                first_place_score = int(Figure.score)
+                file['scores'] = [int(Figure.score)]
 
-                print(your_place)
-                print(first_place_score)
+                your_place = 1
 
-            with open("data.json", "w") as f:
-                json.dump(file, f)
+
+            with app.app_context():
+                try:
+                    new_user = User(score=Figure.score)
+
+                    db.session.add(new_user)
+                    db.session.commit()
+                except Exception:
+                    with open("data.json", "w") as f:
+                        json.dump(file, f)
+
 
             for i in snowflakes:
                 i.set_color((255, 255, 255))
