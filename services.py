@@ -39,6 +39,3 @@ def set_users_safe(file):
         with open("data.json", "w") as f:
             json.dump(file, f)
 
-# app = create_app()
-# with app.app_context():
-#     print(get_users_safe())
