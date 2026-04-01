@@ -87,7 +87,6 @@ while not game_over:
                 lst = get_users_safe()
 
             file = {}
-            lst.sort(reverse=True)
             print(lst)
 
             if lst:
@@ -102,7 +101,7 @@ while not game_over:
 
 
             with app.app_context():
-                set_users_safe(Figure.score, file)
+                set_users_safe(file)
 
 
             for i in snowflakes:

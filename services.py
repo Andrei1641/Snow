@@ -6,14 +6,13 @@ from db import *
 from models import User
 
 
+
 def get_users_safe():
     try:
         db.session.execute(text("SELECT 1"))
 
-        users = User.query.all()
-        score = []
-        for user in users:
-            score.append(user.score)
+        user = User.query.first()
+        score = user.scores
         return score
 
     except Exception as e:
@@ -29,12 +28,17 @@ def get_users_safe():
 
         return score
 
-def set_users_safe(score, file):
+def set_users_safe(file):
     try:
-        new_user = User(score=score)
+        user = User.query.first()
+        new_score = file['scores']
+        user.scores = new_score
 
-        db.session.add(new_user)
         db.session.commit()
     except Exception:
         with open("data.json", "w") as f:
             json.dump(file, f)
+
+# app = create_app()
+# with app.app_context():
+#     print(get_users_safe())
