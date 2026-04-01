@@ -84,7 +84,6 @@ while not game_over:
 
             app = create_app()
             with app.app_context():
-                print(get_users_safe())
                 lst = get_users_safe()
 
             file = {}
@@ -103,14 +102,7 @@ while not game_over:
 
 
             with app.app_context():
-                try:
-                    new_user = User(score=Figure.score)
-
-                    db.session.add(new_user)
-                    db.session.commit()
-                except Exception:
-                    with open("data.json", "w") as f:
-                        json.dump(file, f)
+                set_users_safe(Figure.score, file)
 
 
             for i in snowflakes:

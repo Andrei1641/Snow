@@ -11,9 +11,10 @@ def create_app():
     password = env.get('DB_PASSWORD')
     dbname = env.get('DB_NAME')
     host = env.get('HOST')
+    user = env.get('USER')
 
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql+pymysql://root:{password}@{host}/{dbname}"
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql+pymysql://{user}:{password}@{host}/{dbname}"
 
     db.init_app(app)
 

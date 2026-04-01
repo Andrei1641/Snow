@@ -28,3 +28,13 @@ def get_users_safe():
             score = file.get('scores')
 
         return score
+
+def set_users_safe(score, file):
+    try:
+        new_user = User(score=score)
+
+        db.session.add(new_user)
+        db.session.commit()
+    except Exception:
+        with open("data.json", "w") as f:
+            json.dump(file, f)
